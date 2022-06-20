@@ -321,7 +321,7 @@ for singer in artist_data['results']['artistmatches']['artist']:
 print (singer.keys())
 
 
-# In[55]:
+# In[24]:
 
 
 for singer in artist_data['results']['artistmatches']['artist']:
@@ -354,7 +354,7 @@ for singer in artist_data['results']['artistmatches']['artist']:
 # 
 # - *Tip: Use `.append` to add a single element onto a list*
 
-# In[60]:
+# In[25]:
 
 
 mbids=[]
@@ -400,14 +400,22 @@ print (mbids)
 # - *Tip: You don't want to use a comma when printing, because commas add spaces into your text and URLs can't have that*
 # - *Tip: Make sure your URL has `artist.getinfo` in it - if not, you're using the wrong endpoint.*
 
-# In[94]:
+# In[82]:
 
 
 #2.0/?method=artist.getinfo&artist=Cher&
 url = "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=804cd49166542ef440629a2055b5359f&format=json&mbid="
-urls=[]
-print(["{}{}".format(url,mbid) for mbid in mbids])
-mbid_urls=["{}{}".format(url,mbid) for mbid in mbids]
+result=[]
+for mbid in mbids:
+    url_mbid=url+mbid
+    result.append(url_mbid)
+print (result)
+
+
+# In[ ]:
+
+
+
 
 
 # Your results should look something like
@@ -427,7 +435,7 @@ mbid_urls=["{}{}".format(url,mbid) for mbid in mbids]
 # 
 # So, if we have a list of numbers like this:
 
-# In[ ]:
+# In[27]:
 
 
 numbers = [4, 5, 6, 7]
@@ -436,7 +444,7 @@ numbers
 
 # You can actually say to Python, **give me the first two**, and it will only give you the first two.
 
-# In[ ]:
+# In[28]:
 
 
 numbers[:2]
@@ -451,14 +459,15 @@ numbers[:2]
 # - *Tip: The code is the same as last time you got an artist's name from their info page, it's just going to be inside of a loop*
 # - *Tip: USE `PRINT` TO SEE WHAT YOU ARE LOOKING AT!!!!!*
 
-# In[101]:
+# In[99]:
 
 
-print(mbid_urls)
-for mbid_url in mbid_urls[:3]:
-    response= requests.get(mbid_url)
+for url_mbid in result[:3]:
+    response= requests.get(url_mbid)
     three_artist_data = response.json()
     print(three_artist_data['artist']['name'])
+#print (three_artist_data.keys())
+#print (three_artist_data['artist'].keys())
 
 
 # In[ ]:
@@ -478,14 +487,15 @@ for mbid_url in mbid_urls[:3]:
 # - *Tip: The code is the same as last time you got an artist's name from their info page, it's just going to be inside of a loop*
 # - *Tip: It's a for loop in a for loop!*
 
-# In[105]:
+# In[98]:
 
 
-for mbid_url in mbid_urls[:3]:
-    response= requests.get(mbid_url)
+for url_mbid in result[:3]:
+    response= requests.get(url_mbid)
     three_artist_data = response.json()
+#print (three_artist_data['artist'].keys())
     print(three_artist_data['artist']['name'])
-    print(three_artist_data['artist']['tags'])
+    print (three_artist_data['artist']['tags'])
 
 
 # ## 12) Using the first ten mbids, print the artist's name and whether they're a rapper
@@ -495,6 +505,27 @@ for mbid_url in mbid_urls[:3]:
 # - *Tip: Rap tags include hip hop, swag, crunk, rap, dirty south, and probably a bunch of other stuff! You can include as many categories as you'd like.*
 # - *Tip: You can use `2 in [1, 2, 3]` to find out if `2` is in the list of `[1, 2, 3]`.*
 # - *Tip: Every time you look at a new artist, you can say they are NOT a rapper. And once you find out one of their tags is hip hop or rap, then you can note that they're a rapper. Then once you're done looking at their tags, then you can say HEY this is a rapper, or HEY this is not a rapper.*
+
+# In[161]:
+
+
+list_of_rapcategory=["rap", "Hip-Hop", "hip hop", "based","Gansta Rap", "drill", "memphis rap", "swag", "Crunk", "Dirty South"]    
+for url_mbid in result[:10]:
+    response= requests.get(url_mbid)
+    ten_artist_data = response.json()
+    #print (ten_artist_data)
+    print (ten_artist_data['artist']['name'])
+    #print (ten_artist_data['artist']['tags'])
+    #print (ten_artist_data['artist']['tags']['tag'])
+    for element in ten_artist_data['artist']['tags']['tag']:
+     #print (element['name']):
+        if element['name'] in list_of_rapcategory:
+            print ("Rapper")
+            break
+        else:
+            print ("Not a rapper")
+            break
+
 
 # In[ ]:
 
@@ -522,10 +553,11 @@ for mbid_url in mbid_urls[:3]:
 
 # ## 13) What percent of "lil" results are rappers?
 
-# In[ ]:
+# In[176]:
 
 
-
+percentage_of_rappers=round(8/10*100)
+print (percentage_of_rappers, "percent of 'lil' results are rappers")
 
 
 # ## 14) Seriously you are all-powerful now.
